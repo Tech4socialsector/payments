@@ -44,7 +44,7 @@ class PaymentWebForm(WebForm):
 				"reference_docname": doc.name,
 				"payer_email": frappe.session.user,
 				"payer_name": frappe.utils.get_fullname(frappe.session.user),
-				"order_id": doc.name,
+				"receipt": doc.name,
 				"currency": self.currency,
 				"redirect_to": frappe.utils.get_url(self.success_url or self.route),
 			}
