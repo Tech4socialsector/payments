@@ -36,6 +36,13 @@ class PaymentWebForm(WebForm):
 			if amount is None or Decimal(amount) <= 0:
 				return frappe.utils.get_url(self.success_url or self.route)
 
+			redirect_url = frappe.utils.get_url(self.success_url or self.route)
+			if "?" in redirect_url:
+				if "name=" not in redirect_url:
+					redirect_url += f"&name={doc.name}"
+			else:
+				redirect_url += f"?name={doc.name}"
+
 			payment_details = {
 				"amount": amount,
 				"title": title,
@@ -46,11 +53,21 @@ class PaymentWebForm(WebForm):
 				"payer_name": frappe.utils.get_fullname(frappe.session.user),
 				"receipt": doc.name,
 				"currency": self.currency,
-				"redirect_to": frappe.utils.get_url(self.success_url or self.route),
+				"redirect_to": redirect_url,
 			}
 
 			# Redirect the user to this url
 			return controller.get_payment_url(**payment_details)
+
+	def on_payment_authorized(self, status):
+		"""
+		Called by the payment gateway controller when payment is authorized/completed.
+		Returns the exact URL to redirect the user to.
+		"""
+		redirect_url = self.success_url or self.route
+		if redirect_url:
+			return f"/{redirect_url}?name={self.name}&transaction_id=pay_authorized"
+		return None
 
 
 @frappe.whitelist(allow_guest=True)
