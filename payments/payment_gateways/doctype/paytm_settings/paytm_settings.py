@@ -164,15 +164,19 @@ def finalize_request(order_id, transaction_response):
 			if custom_redirect_to:
 				redirect_to = custom_redirect_to
 
+			redirect_url = f"payment-success?doctype={transaction_data.reference_doctype}&docname={transaction_data.reference_docname}"
+		else:
 			redirect_url = "payment-success"
 	else:
 		request.db_set("status", "Failed")
 		redirect_url = "payment-failed"
 
 	if redirect_to:
-		redirect_url += "?" + urlencode({"redirect_to": redirect_to})
+		redirect_url += "&" if "?" in redirect_url else "?"
+		redirect_url += urlencode({"redirect_to": redirect_to})
 	if redirect_message:
-		redirect_url += "&" + urlencode({"redirect_message": redirect_message})
+		redirect_url += "&" if "?" in redirect_url else "?"
+		redirect_url += urlencode({"redirect_message": redirect_message})
 
 	frappe.local.response["type"] = "redirect"
 	frappe.local.response["location"] = redirect_url

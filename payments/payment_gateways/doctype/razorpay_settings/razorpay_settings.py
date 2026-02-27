@@ -442,10 +442,10 @@ class RazorpaySettings(Document):
 					redirect_to = custom_redirect_to
 
 			redirect_url = (
-				f"payment-success?doctype={self.data.reference_doctype}&docname={self.data.reference_docname}"
+				f"payment-success?doctype={self.data.reference_doctype}&docname={self.data.reference_docname}&token={self.data.token}"
 			)
 		else:
-			redirect_url = "payment-failed"
+			redirect_url = f"payment-failed?token={self.data.token}"
 
 		if redirect_to:
 			redirect_url += "&" + urlencode({"redirect_to": redirect_to})

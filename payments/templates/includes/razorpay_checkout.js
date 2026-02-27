@@ -1,5 +1,8 @@
 $(document).ready(function () {
 	(function (e) {
+		window.__razorpay_flow_cancelled = false;
+		window.__razorpay_payment_completed = false;
+
 		var options = {
 			"key": "{{ api_key }}",
 			"amount": cint({{ amount }} * 100), // 2000 paise = INR 20
@@ -8,7 +11,21 @@ $(document).ready(function () {
 				"description": "{{ description }}",
 					"subscription_id": "{{ subscription_id }}",
 						"order_id": "{{ order_id }}",
+		"modal": {
+			"ondismiss": function () {
+				// User closed the Razorpay modal (treat as cancelled).
+				// Note: Razorpay may close the modal after a successful payment too (race with handler).
+				// So we delay redirect a bit and cancel it if handler runs.
+				window.__razorpay_flow_cancelled = true;
+				setTimeout(function () {
+					if (window.__razorpay_payment_completed) return;
+					window.location.href = "/payment-cancel?token={{ token }}";
+				}, 1200);
+			}
+		},
 							"handler": function (response) {
+								window.__razorpay_payment_completed = true;
+								window.__razorpay_flow_cancelled = false;
 								razorpay.make_payment_log(response, options, "{{ reference_doctype }}", "{{ reference_docname }}", "{{ token }}");
 							},
 	"prefill": {
@@ -20,6 +37,21 @@ $(document).ready(function () {
 };
 
 var rzp = new Razorpay(options);
+rzp.on("payment.failed", function (response) {
+	// Record the error against the Integration Request, then redirect.
+	frappe.call({
+		method: "payments.payment_gateways.doctype.razorpay_settings.razorpay_settings.order_payment_failure",
+		freeze: false,
+		headers: { "X-Requested-With": "XMLHttpRequest" },
+		args: {
+			"integration_request": "{{ token }}",
+			"params": JSON.stringify(response && response.error ? response.error : response)
+		},
+		always: function () {
+			window.location.href = "/payment-failed?token={{ token }}";
+		}
+	});
+});
 rzp.open();
 		//	e.preventDefault();
 	}) ();
@@ -28,6 +60,7 @@ rzp.open();
 frappe.provide('razorpay');
 
 razorpay.make_payment_log = function (response, options, doctype, docname, token) {
+	if (window.__razorpay_flow_cancelled) return;
 	$('.razorpay-loading').addClass('hidden');
 	$('.razorpay-confirming').removeClass('hidden');
 
@@ -45,7 +78,7 @@ razorpay.make_payment_log = function (response, options, doctype, docname, token
 		callback: function (r) {
 			if (r.message && r.message.status == 200) {
 				let final_url = r.message.redirect_to;
-				// If Frappe nested our custom URL as a query parameter (e.g. payment-success?doctype=...&redirect_to=/fle-success-page...)
+				// If Frappe nested our custom URL as a query parameter, unwrap it
 				let url_obj = new URL(final_url, window.location.origin);
 				if (url_obj.searchParams.has('redirect_to')) {
 					final_url = url_obj.searchParams.get('redirect_to');

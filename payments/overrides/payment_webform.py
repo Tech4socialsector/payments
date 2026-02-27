@@ -37,11 +37,6 @@ class PaymentWebForm(WebForm):
 				return frappe.utils.get_url(self.success_url or self.route)
 
 			redirect_url = frappe.utils.get_url(self.success_url or self.route)
-			if "?" in redirect_url:
-				if "name=" not in redirect_url:
-					redirect_url += f"&name={doc.name}"
-			else:
-				redirect_url += f"?name={doc.name}"
 
 			payment_details = {
 				"amount": amount,
@@ -53,8 +48,11 @@ class PaymentWebForm(WebForm):
 				"payer_name": frappe.utils.get_fullname(frappe.session.user),
 				"receipt": doc.name,
 				"currency": self.currency,
-				"redirect_to": redirect_url,
+				# For FLE, we want to land on the built-in payment pages (payment-success/payment-failed/payment-cancel)
+				# without being auto-redirected away. So we do NOT send redirect_to for this doctype.
 			}
+			if doc.doctype != "Foundations for a Legal Education":
+				payment_details["redirect_to"] = redirect_url
 
 			# Redirect the user to this url
 			return controller.get_payment_url(**payment_details)
