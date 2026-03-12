@@ -10,13 +10,21 @@
 	</div>
 	<p>{{ _("Your payment is cancelled.") }}</p>
 	<div><a href='{{ frappe.form_dict.redirect_to or "/" }}' class='btn btn-primary btn-sm'>
-		{{ _("Continue") }}</a></div>
+			{{ _("Continue") }}</a></div>
 </div>
 <style>
-.hero-and-content {
-	background-color: #f5f7fa;
-}
-{% include "templates/styles/card_style.css" %}
+	.hero-and-content {
+		background-color: #f5f7fa;
+	}
+
+	.page-card {
+		margin-top: 106px;
+		padding: 47px;
+	}
+
+		{
+		% include "templates/styles/card_style.css" %
+	}
 </style>
 
 {% endblock %}
