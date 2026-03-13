@@ -90,7 +90,7 @@ def download_receipt_pdf(doctype: str = None, docname: str = None, token: str = 
 	def esc(v):
 		return frappe.utils.escape_html(str(v or ""))
 
-	banner_url = frappe.utils.get_url("/files/nls-final-crop.jpeg")
+	logo_url = frappe.utils.get_url("/files/nlsiu-logo.jpg")
 
 	html = f"""
 		<html>
@@ -98,16 +98,33 @@ def download_receipt_pdf(doctype: str = None, docname: str = None, token: str = 
 			<meta charset="utf-8" />
 			<style>
 				body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; font-size: 12px; color: #111827; }}
-				.banner {{ width: 100%; height: 120px; object-fit: cover; border-radius: 10px; }}
 				.h1 {{ font-size: 18px; font-weight: 700; margin: 12px 0 12px 0; }}
 				.sub {{ color: #4b5563; margin: 0 0 12px 0; }}
 				table {{ width: 100%; border-collapse: collapse; }}
 				td {{ padding: 10px 12px; border: 1px solid #E5E7EB; vertical-align: top; }}
 				td.k {{ width: 35%; background: #F9FAFB; font-weight: 600; }}
+				
+				/* Header Styles */
+				table.header-table {{ border: none; margin-bottom: 20px; border-bottom: 2px solid #a81119; padding-bottom: 10px; }}
+				table.header-table td {{ border: none; padding: 0; vertical-align: middle; }}
+				.header-title-container {{ text-align: center; color: #a81119; font-family: "Merriweather", serif; }}
+				.university-name {{ font-size: 16px; font-weight: bold; margin: 0; }}
+				.department-name {{ font-size: 14px; font-weight: bold; margin: 5px 0 0 0; }}
 			</style>
 		</head>
 		<body>
-			<img class="banner" src="{esc(banner_url)}" />
+			<table class="header-table">
+				<tr>
+					<td style="width: 80px;">
+						<img src="{esc(logo_url)}" style="width: 60px; height: auto;" />
+					</td>
+					<td class="header-title-container">
+						<div class="university-name">National Law School of India University, Bengaluru</div>
+						<div class="department-name">Foundations for a Legal Education Certificate Course (FLE)</div>
+					</td>
+					<td style="width: 80px;"></td> <!-- Spacer for center alignment -->
+				</tr>
+			</table>
 			<div class="h1">Payment Receipt</div>
 			<p class="sub">Reference: {esc(receipt.get("reference_no"))}</p>
 			<table>
