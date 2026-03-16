@@ -96,8 +96,9 @@ def download_receipt_pdf(doctype: str = None, docname: str = None, token: str = 
 		<html>
 		<head>
 			<meta charset="utf-8" />
+			<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet" />
 			<style>
-				body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; font-size: 12px; color: #111827; }}
+				body {{ font-family: "Merriweather", serif; font-size: 12px; color: #111827; }}
 				.h1 {{ font-size: 18px; font-weight: 700; margin: 12px 0 12px 0; }}
 				.sub {{ color: #4b5563; margin: 0 0 12px 0; }}
 				table {{ width: 100%; border-collapse: collapse; }}
