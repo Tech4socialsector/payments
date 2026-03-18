@@ -34,7 +34,7 @@ def get_context(context):
 					"route",
 				)
 				if webform_route:
-					context.redirect_to = f"/{webform_route}"
+					context.redirect_to = f"/{webform_route}/{reference_docname}"
 	finally:
 		frappe.db.commit()
 

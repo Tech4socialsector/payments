@@ -29,5 +29,14 @@ def get_context(context):
 				current = frappe.db.get_value(reference_doctype, reference_docname, "payment_status")
 				if current not in ("Paid", "Cancelled"):
 					frappe.db.set_value(reference_doctype, reference_docname, "payment_status", "Cancelled")
+
+				# Redirect to the web form in edit mode so the user can retry
+				webform_route = frappe.db.get_value(
+					"Web Form",
+					{"doc_type": reference_doctype, "published": 1},
+					"route",
+				)
+				if webform_route:
+					context.redirect_to = f"/{webform_route}/{reference_docname}"
 	finally:
 		frappe.db.commit()
