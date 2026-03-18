@@ -25,8 +25,14 @@
 				<button type="button" class="btn btn-primary btn-sm" onclick="window.print()">{{ _("Print") }}</button>
 				<a class="btn btn-outline-primary btn-sm"
 					href="/api/method/payments.templates.pages.payment_success.download_receipt_pdf?doctype={{ receipt.reference_doctype|urlencode }}&docname={{ receipt.reference_docname|urlencode }}&token={{ receipt.token|urlencode }}">
-					{{ _("Download PDF") }}
+					{{ _("Download Receipt") }}
 				</a>
+				{% if receipt.reference_doctype == "Foundations for a Legal Education" %}
+				<a class="btn btn-outline-primary btn-sm"
+					href="/api/method/payments.templates.pages.payment_success.download_application_pdf?doctype={{ receipt.reference_doctype|urlencode }}&docname={{ receipt.reference_docname|urlencode }}&token={{ receipt.token|urlencode }}">
+					{{ _("Download Application") }}
+				</a>
+				{% endif %}
 				{% if redirect_to %}
 				<a href="{{ redirect_to }}" class="btn btn-outline-secondary btn-sm">{{ _("Continue") }}</a>
 				{% else %}
