@@ -277,7 +277,7 @@ def download_application_pdf(doctype: str = None, docname: str = None, token: st
 			</table>
 			<table class="main">
 				{sec("Candidate details")}
-				{row("Application reference", doc.name)}
+				{row("Application number", doc.name)}
 				{row("Submission date", doc.timestamp)}
 				{row("Name on certificate", doc.candidate_name)}
 				{row("Email address", doc.email_address)}
