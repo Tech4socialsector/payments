@@ -11,33 +11,26 @@ no_cache = True
 
 
 def _get_photo_src(photo_url):
-	"""Return a src value suitable for embedding a Frappe file in a wkhtmltopdf PDF.
-
-	Public files are served via their HTTP URL (same approach Frappe uses for logos).
-	Private files are embedded as a base64 data URI since they are not HTTP-accessible.
-	"""
+	"""Return a base64 data URI for a Frappe file so wkhtmltopdf never makes HTTP requests."""
 	if not photo_url:
 		return None
 	try:
-		import urllib.parse
+		import base64, mimetypes
 
 		if photo_url.startswith("/private/files/"):
-			# Private files: read and base64-encode so wkhtmltopdf can render them
-			import base64, mimetypes
+			file_path = os.path.abspath(frappe.get_site_path("private", "files", photo_url[len("/private/files/"):]))
+		elif photo_url.startswith("/files/"):
+			file_path = os.path.abspath(frappe.get_site_path("public", "files", photo_url[len("/files/"):]))
+		else:
+			return None
 
-			file_path = os.path.abspath(frappe.get_site_path("private", "files", photo_url[len("/private/files/") :]))
-			if not os.path.exists(file_path):
-				return None
-			with open(file_path, "rb") as f:
-				data = f.read()
-			mime_type = mimetypes.guess_type(file_path)[0] or "image/jpeg"
-			b64 = base64.b64encode(data).decode("utf-8")
-			return f"data:{mime_type};base64,{b64}"
-
-		# Public files: build a proper absolute HTTP URL (same pattern as logo)
-		# URL-encode the path so spaces / special chars in filenames don't break the URL
-		encoded = urllib.parse.quote(photo_url, safe="/")
-		return frappe.utils.get_url(encoded)
+		if not os.path.exists(file_path):
+			return None
+		with open(file_path, "rb") as f:
+			data = f.read()
+		mime_type = mimetypes.guess_type(file_path)[0] or "image/jpeg"
+		b64 = base64.b64encode(data).decode("utf-8")
+		return f"data:{mime_type};base64,{b64}"
 	except Exception:
 		return None
 
