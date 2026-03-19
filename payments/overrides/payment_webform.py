@@ -41,7 +41,7 @@ class PaymentWebForm(WebForm):
 			payment_details = {
 				"amount": amount,
 				"title": title,
-				"description": title,
+				"description": "Payment for FLE" if doc.doctype == "Foundations for a Legal Education" else title,
 				"reference_doctype": doc.doctype,
 				"reference_docname": doc.name,
 				"payer_email": frappe.session.user,
