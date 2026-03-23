@@ -82,7 +82,7 @@ def accept(web_form, data, docname=None, for_payment=False):
 
 	web_form = frappe.get_doc("Web Form", web_form)
 
-	if docname and not web_form.allow_edit:
+	if docname and not web_form.allow_edit and not for_payment:
 		frappe.throw(frappe._("You are not allowed to update this Web Form Document"))
 
 	frappe.flags.in_web_form = True

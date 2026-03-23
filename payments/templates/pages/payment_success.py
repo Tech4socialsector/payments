@@ -145,7 +145,7 @@ def download_receipt_pdf(doctype: str = None, docname: str = None, token: str = 
 				table.header-table {{ border: none; margin-bottom: 20px; border-bottom: 2px solid #a81119; padding-bottom: 10px; }}
 				table.header-table td {{ border: none; padding: 0; vertical-align: middle; }}
 				.header-title-container {{ text-align: center; color: #a81119; font-family: "Merriweather", serif; }}
-				.university-name {{ font-size: 16px; font-weight: bold; margin: 0; }}
+				.university-name {{ font-size: 20px; font-weight: bold; margin: 0; }}
 				.department-name {{ font-size: 14px; font-weight: bold; margin: 5px 0 0 0; }}
 			</style>
 		</head>
@@ -156,7 +156,7 @@ def download_receipt_pdf(doctype: str = None, docname: str = None, token: str = 
 						<img src="{esc(logo_url)}" style="width: 60px; height: auto;" />
 					</td>
 					<td class="header-title-container">
-						<div class="university-name">National Law School of India University, Bengaluru</div>
+						<div class="university-name">NATIONAL LAW SCHOOL OF INDIA UNIVERSITY, BENGALURU</div>
 						<div class="department-name">Foundations for a Legal Education Certificate Course (FLE)</div>
 					</td>
 					{photo_td}
@@ -245,7 +245,7 @@ def download_application_pdf(doctype: str = None, docname: str = None, token: st
 				table.header-table {{ border: none; margin-bottom: 16px; border-bottom: 2px solid #a81119; padding-bottom: 8px; width: 100%; border-collapse: collapse; }}
 				table.header-table td {{ border: none; padding: 0; vertical-align: middle; }}
 				.header-title-container {{ text-align: center; color: #a81119; }}
-				.university-name {{ font-size: 15px; font-weight: bold; margin: 0; }}
+				.university-name {{ font-size: 19px; font-weight: bold; margin: 0; }}
 				.department-name {{ font-size: 12px; font-weight: bold; margin: 4px 0 0 0; }}
 				.app-ref {{ font-size: 11px; margin: 4px 0 0 0; color: #374151; }}
 				table.main {{ width: 100%; border-collapse: collapse; margin-bottom: 0; }}
@@ -261,7 +261,7 @@ def download_application_pdf(doctype: str = None, docname: str = None, token: st
 						<img src="{esc(logo_url)}" style="width: 55px; height: auto;" />
 					</td>
 					<td class="header-title-container">
-						<div class="university-name">National Law School of India University, Bengaluru</div>
+						<div class="university-name">NATIONAL LAW SCHOOL OF INDIA UNIVERSITY, BENGALURU</div>
 						<div class="department-name">Foundations for a Legal Education Certificate Course (FLE)</div>
 						<div class="app-ref">Application form — {esc(doc.name)}</div>
 					</td>
