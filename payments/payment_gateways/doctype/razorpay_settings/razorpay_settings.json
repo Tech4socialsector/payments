@@ -9,7 +9,8 @@
   "api_key",
   "api_secret",
   "redirect_to",
-  "webhook_secret"
+  "webhook_secret",
+  "merchant_account_name"
  ],
  "fields": [
   {
@@ -36,6 +37,12 @@
    "fieldname": "redirect_to",
    "fieldtype": "Data",
    "label": "Redirect To"
+  },
+  {
+   "description": "Your bank account name as registered with Razorpay (shown in Settlement Report)",
+   "fieldname": "merchant_account_name",
+   "fieldtype": "Data",
+   "label": "Merchant Account Name"
   }
  ],
  "in_create": 1,
